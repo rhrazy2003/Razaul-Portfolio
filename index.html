@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yogesh | Portfolio</title>
+  <style>
+    /* ===== GLOBAL STYLES ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body {
+      background: #0d0d0d;
+      color: #fff;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    h1, h2, h3 { text-align: center; margin-bottom: 20px; letter-spacing: 1px; }
+    section { padding: 80px 10%; position: relative; z-index: 2; }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #0d0d0d; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #ff0080, #7928ca);
+      border-radius: 6px;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      height: 100vh;
+      position: relative;
+      display: flex; justify-content: center; align-items: center;
+      text-align: center; flex-direction: column; color: #fff;
+      overflow: hidden;
+    }
+    .hero::after {
+      content:""; position:absolute; inset:0;
+      background: rgba(0,0,0,0.65);
+      z-index:1;
+    }
+    .hero h1 { font-size: 4rem; z-index:2; background: linear-gradient(90deg,#ff0080,#7928ca); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .hero p { margin-top: 10px; font-size: 1.3rem; z-index:2; }
+    .btn {
+      padding: 12px 30px; margin-top: 25px; z-index:2;
+      background: linear-gradient(90deg, #ff0080, #7928ca);
+      color: #fff; border-radius: 30px; cursor: pointer; border: none; transition: 0.3s;
+    }
+    .btn:hover { transform: scale(1.1); }
+
+    /* Canvas */
+    #heroCanvas {
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      background: #0d0d0d;
+      z-index:0;
+    }
+
+    /* ===== ABOUT SECTION ===== */
+    .about { background: #151515; }
+    .about p {
+      max-width: 800px; margin: auto; text-align: center; font-size: 1.2rem; line-height: 1.8;
+    }
+
+    /* ===== SKILLS SECTION ===== */
+    .skills { background: #0d0d0d; }
+    .progress { margin: 15px 0; }
+    .progress span { font-size: 1rem; }
+    .bar { height: 12px; width: 100%; background: #333; border-radius: 6px; overflow: hidden; margin-top: 8px; }
+    .bar-fill { height: 12px; width: 0; background: linear-gradient(90deg, #ff0080, #7928ca); border-radius: 6px; }
+
+    /* ===== PROJECTS ===== */
+    .projects { background: #151515; }
+    .gallery {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .gallery img {
+      width: 100%; height: 200px; object-fit: cover; border-radius: 12px;
+      transition: transform 0.4s; cursor: pointer;
+    }
+    .gallery img:hover { transform: scale(1.1); }
+
+    /* ===== CONTACT ===== */
+    .contact { background: #0d0d0d; text-align: center; }
+    .contact form {
+      max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 15px;
+    }
+    .contact input, .contact textarea {
+      padding: 12px; border: none; border-radius: 8px; outline: none;
+    }
+    .contact button {
+      padding: 12px; background: linear-gradient(90deg, #ff0080, #7928ca);
+      color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s;
+    }
+    .contact button:hover { transform: scale(1.05); }
+
+    /* ===== THANK YOU POPUP ===== */
+    .thankyou {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85); display: none;
+      justify-content: center; align-items: center; z-index: 9999;
+    }
+    .thankyou div {
+      background: #111; padding: 50px; border-radius: 20px; text-align: center;
+      animation: popUp 0.8s ease;
+      box-shadow: 0 0 30px rgba(255,0,128,0.7);
+    }
+    .thankyou h2 {
+      font-size: 2rem;
+      background: linear-gradient(90deg,#ff0080,#7928ca);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      margin-bottom: 15px;
+    }
+    .thankyou p { font-size: 1.2rem; }
+    @keyframes popUp { 0% {transform: scale(0);} 100% {transform: scale(1);} }
+
+    /* ===== HIRE ME MAGIC BUTTON ===== */
+    .magic-btn {
+      position: fixed; bottom: 30px; right: 30px;
+      padding: 15px 25px;
+      background: linear-gradient(90deg, #ff0080, #7928ca);
+      color: #fff; border: none; border-radius: 40px;
+      font-size: 1rem; cursor: pointer; z-index: 1000;
+      box-shadow: 0 0 15px rgba(255,0,128,0.6);
+      transition: transform 0.3s;
+    }
+    .magic-btn:hover { transform: scale(1.1) rotate(-3deg); }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="heroCanvas"></canvas>
+    <h1>Yogesh Portfolio</h1>
+    <p>Senior Web Developer | HTML | CSS | JS | MongoDB</p>
+    <button class="btn" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Explore</button>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <h2>About Me</h2>
+    <p>I am Yogesh, a passionate Senior Web Developer with expertise in HTML, CSS, JavaScript, MongoDB, and modern libraries. I love building creative, responsive, and animated websites that leave a lasting impression.</p>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="skills">
+    <h2>My Skills</h2>
+    <div class="progress"><span>HTML</span><div class="bar"><div class="bar-fill" data-skill="95"></div></div></div>
+    <div class="progress"><span>CSS</span><div class="bar"><div class="bar-fill" data-skill="90"></div></div></div>
+    <div class="progress"><span>JavaScript</span><div class="bar"><div class="bar-fill" data-skill="92"></div></div></div>
+    <div class="progress"><span>MongoDB</span><div class="bar"><div class="bar-fill" data-skill="85"></div></div></div>
+    <div class="progress"><span>React</span><div class="bar"><div class="bar-fill" data-skill="80"></div></div></div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="projects">
+    <h2>My Projects</h2>
+    <div class="gallery">
+      <!-- Replace with 20 Unsplash images -->
+      <img src="https://source.unsplash.com/400x300/?technology,code,1">
+      <img src="https://source.unsplash.com/400x300/?technology,web,2">
+      <img src="https://source.unsplash.com/400x300/?developer,3">
+      <img src="https://source.unsplash.com/400x300/?coding,4">
+      <img src="https://source.unsplash.com/400x300/?computer,5">
+      <img src="https://source.unsplash.com/400x300/?javascript,6">
+      <img src="https://source.unsplash.com/400x300/?mongodb,7">
+      <img src="https://source.unsplash.com/400x300/?html,8">
+      <img src="https://source.unsplash.com/400x300/?css,9">
+      <img src="https://source.unsplash.com/400x300/?design,10">
+      <img src="https://source.unsplash.com/400x300/?frontend,11">
+      <img src="https://source.unsplash.com/400x300/?backend,12">
+      <img src="https://source.unsplash.com/400x300/?webdev,13">
+      <img src="https://source.unsplash.com/400x300/?startup,14">
+      <img src="https://source.unsplash.com/400x300/?office,15">
+      <img src="https://source.unsplash.com/400x300/?uiux,16">
+      <img src="https://source.unsplash.com/400x300/?laptop,17">
+      <img src="https://source.unsplash.com/400x300/?dashboard,18">
+      <img src="https://source.unsplash.com/400x300/?server,19">
+      <img src="https://source.unsplash.com/400x300/?cloud,20">
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact">
+    <h2>Contact Me</h2>
+    <form id="contactForm">
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <!-- THANK YOU POPUP -->
+  <div class="thankyou" id="thankyou">
+    <div>
+      <h2>Thank You!</h2>
+      <p>Your message has been received. I’ll get back to you soon.</p>
+    </div>
+  </div>
+
+  <!-- HIRE ME MAGIC BUTTON -->
+  <button class="magic-btn" id="magicBtn">✨ Hire Me</button>
+
+  <!-- JS Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    // Animate hero text
+    gsap.from(".hero h1", {opacity: 0, y: -50, duration: 1});
+    gsap.from(".hero p", {opacity: 0, y: 50, duration: 1, delay: 0.5});
+    gsap.from(".btn", {opacity: 0, scale: 0.5, duration: 1, delay: 1});
+
+    // Animate skills progress bar
+    const bars = document.querySelectorAll(".bar-fill");
+    window.addEventListener("scroll", () => {
+      bars.forEach(bar => {
+        const rect = bar.getBoundingClientRect();
+        if (rect.top < window.innerHeight && bar.style.width === "") {
+          bar.style.width = bar.dataset.skill + "%";
+          gsap.from(bar, {width: 0, duration: 2, ease: "power2.out"});
+        }
+      });
+    });
+
+    // Contact Form
+    const form = document.getElementById("contactForm");
+    const thankyou = document.getElementById("thankyou");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      thankyou.style.display = "flex";
+      gsap.from(".thankyou div", {scale: 0, duration: 0.5, ease: "back.out"});
+      setTimeout(() => { thankyou.style.display = "none"; }, 4000);
+      form.reset();
+    });
+
+    // Hire Me Magic Button - Confetti + Thank You Popup
+    const magicBtn = document.getElementById("magicBtn");
+    magicBtn.addEventListener("click", () => {
+      const duration = 2 * 1000;
+      const end = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+      function randomRange(min, max) { return Math.random() * (max - min) + min; }
+      const interval = setInterval(() => {
+        const timeLeft = end - Date.now();
+        if (timeLeft <= 0) return clearInterval(interval);
+        const count = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { particleCount: count, origin: { x: randomRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount: count, origin: { x: randomRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+      }, 250);
+      thankyou.style.display = "flex";
+      gsap.from(".thankyou div", {scale: 0, duration: 0.6, ease: "back.out"});
+      setTimeout(() => { thankyou.style.display = "none"; }, 4000);
+    });
+
+    /* ===== HERO CANVAS PARTICLE ANIMATION ===== */
+    const canvas = document.getElementById("heroCanvas");
+    const ctx = canvas.getContext("2d");
+    let particlesArray;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ["#ff0080","#7928ca","#00d4ff","#ffffff"];
+    const maxSize = 3;
+    const minSize = 0.5;
+
+    function Particle(x,y,dx,dy,size,color){
+      this.x=x; this.y=y; this.dx=dx; this.dy=dy; this.size=size; this.color=color;
+      this.draw = function(){
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,this.size,0,Math.PI*2,false);
+        ctx.fillStyle=this.color;
+        ctx.fill();
+      }
+      this.update = function(){
+        if(this.x+this.size>canvas.width || this.x-this.size<0){this.dx*=-1;}
+        if(this.y+this.size>canvas.height || this.y-this.size<0){this.dy*=-1;}
+        this.x+=this.dx; this.y+=this.dy;
+        this.draw();
+      }
+    }
+
+    function init(){
+      particlesArray=[];
+      for(let i=0;i<150;i++){
+        let size=Math.random()*(maxSize-minSize)+minSize;
+        let x=Math.random()*(canvas.width-size*2)+size;
+        let y=Math.random()*(canvas.height-size*2)+size;
+        let dx=(Math.random()-0.5)*1.5;
+        let dy=(Math.random()-0.5)*1.5;
+        let color=colors[Math.floor(Math.random()*colors.length)];
+        particlesArray.push(new Particle(x,y,dx,dy,size,color));
+      }
+    }
+
+    function connect(){
+      for(let a=0;a<particlesArray.length;a++){
+        for(let b=a;b<particlesArray.length;b++){
+          let dist = ((particlesArray[a].x - particlesArray[b].x) ** 2) + 
+                     ((particlesArray[a].y - particlesArray[b].y) ** 2);
+          if(dist < (canvas.width/7 * canvas.height/7)){
+            ctx.strokeStyle = "rgba(255,255,255,0.1)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate(){
+      requestAnimationFrame(animate);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for(let i=0;i<particlesArray.length;i++){
+        particlesArray[i].update();
+      }
+      connect();
+    }
+
+    init();
+    animate();
+    window.addEventListener("resize", ()=>{
+      canvas.width=window.innerWidth;
+      canvas.height=window.innerHeight;
+      init();
+    });
+  </script>
+</body>
+</html>
